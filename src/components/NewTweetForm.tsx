@@ -1,12 +1,13 @@
 import { useSession } from "next-auth/react";
 import {
-  FormEvent,
+  type FormEvent,
   useCallback,
   useLayoutEffect,
   useRef,
   useState,
 } from "react";
 import { Button } from "./Button";
+import { api } from "../utils/api";
 import { ProfileImage } from "./ProfileImage";
 
 function updateTextAreaSize(textArea?: HTMLTextAreaElement) {
@@ -35,14 +36,24 @@ function Form() {
     updateTextAreaSize(textAreaRef.current);
   }, [inputValue]);
 
+  //creating tweet
+  const createTweet = api.tweet.create.useMutation({
+    onSuccess : (newTweet )=>{
+      console.log(newTweet);
+      setInputValue("");
+    }
+  })
 
-
+  function handleSubmit(e:FormEvent){
+    e.preventDefault();
+    createTweet.mutate({content: inputValue})
+  }
   if (session.status !== "authenticated") return null;
 
 
   return (
     <form
-    //   onSubmit={handleSubmit}
+      onSubmit={handleSubmit}
       className="flex flex-col gap-2 border-b px-4 py-2"
     >
       <div className="flex gap-4">

@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { NewTweetForm } from "y/components/NewTweetForm";
 // import { InfiniteTweetList } from "~/components/InfiniteTweetList";
 // import { NewTweetForm } from "../components/NewTweetForm";
 // import { api } from "~/utils/api";
@@ -13,6 +14,7 @@ const Home: NextPage = () => {
   const session = useSession();
   return (
     <>
+      <NewTweetForm />
       <header className="sticky top-0 z-10 border-b bg-white pt-2">
         <h1 className="mb-2 px-4 text-lg font-bold">Home</h1>
         {session.status === "authenticated" && (
@@ -35,8 +37,8 @@ const Home: NextPage = () => {
           </div>
         )}
       </header>
-      {/* <NewTweetForm />
-      {selectedTab === "Recent" ? <RecentTweets /> : <FollowingTweets />} */}
+      
+      {/* {selectedTab === "Recent" ? <RecentTweets /> : <FollowingTweets />} */}
     </>
   );
 };
