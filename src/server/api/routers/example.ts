@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { z } from "zod";
 import {
   createTRPCRouter,
@@ -15,7 +17,8 @@ export const exampleRouter = createTRPCRouter({
     }),
 
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.example.findMany();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    return ctx.prisma.user.findMany();
   }),
 
   getSecretMessage: protectedProcedure.query(() => {
