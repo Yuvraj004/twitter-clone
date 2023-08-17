@@ -6,8 +6,8 @@ import {
   useRef,
   useState,
 } from "react";
+import { api } from "y/utils/api";
 import { Button } from "./Button";
-import { api } from "../utils/api";
 import { ProfileImage } from "./ProfileImage";
 
 function updateTextAreaSize(textArea?: HTMLTextAreaElement) {
@@ -31,25 +31,53 @@ function Form() {
     updateTextAreaSize(textArea);
     textAreaRef.current = textArea;
   }, []);
+  const trpcUtils = api.useContext();
 
   useLayoutEffect(() => {
     updateTextAreaSize(textAreaRef.current);
   }, [inputValue]);
 
-  //creating tweet
   const createTweet = api.tweet.create.useMutation({
-    onSuccess : (newTweet )=>{
-      console.log(newTweet);
+    onSuccess: (newTweet) => {
       setInputValue("");
-    }
-  })
 
-  function handleSubmit(e:FormEvent){
-    e.preventDefault();
-    createTweet.mutate({content: inputValue})
-  }
+      if (session.status !== "authenticated") return;
+
+      trpcUtils.tweet.infiniteFeed.setInfiniteData({}, (oldData) => {
+        if (oldData?.pages[0] == null) return;
+
+        const newCacheTweet = {
+          ...newTweet,
+          likeCount: 0,
+          likedByMe: false,
+          user: {
+            id: session.data.user.id,
+            name: session.data.user.name ?? null,
+            image: session.data.user.image ?? null,
+          },
+        };
+
+        return {
+          ...oldData,
+          pages: [
+            {
+              ...oldData.pages[0],
+              tweets: [newCacheTweet, ...oldData.pages[0].tweets],
+            },
+            ...oldData.pages.slice(1),
+          ],
+        };
+      });
+    },
+  });
+
   if (session.status !== "authenticated") return null;
 
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+
+    createTweet.mutate({ content: inputValue });
+  }
 
   return (
     <form

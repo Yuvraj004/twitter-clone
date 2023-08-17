@@ -2,9 +2,8 @@ import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { NewTweetForm } from "y/components/NewTweetForm";
-// import { InfiniteTweetList } from "~/components/InfiniteTweetList";
-// import { NewTweetForm } from "../components/NewTweetForm";
-// import { api } from "~/utils/api";
+import { InfiniteTweetList } from "y/components/InfiniteTweetList";
+import { api } from "y/utils/api";
 
 const TABS = ["Recent", "Following"] as const;
 
@@ -14,7 +13,7 @@ const Home: NextPage = () => {
   const session = useSession();
   return (
     <>
-      <NewTweetForm />
+      
       <header className="sticky top-0 z-10 border-b bg-white pt-2">
         <h1 className="mb-2 px-4 text-lg font-bold">Home</h1>
         {session.status === "authenticated" && (
@@ -37,44 +36,44 @@ const Home: NextPage = () => {
           </div>
         )}
       </header>
-      
-      {/* {selectedTab === "Recent" ? <RecentTweets /> : <FollowingTweets />} */}
+      <NewTweetForm />
+      {selectedTab === "Recent" ? <RecentTweets /> : <FollowingTweets />}
     </>
   );
 };
 
-// function RecentTweets() {
-//   const tweets = api.tweet.infiniteFeed.useInfiniteQuery(
-//     {},
-//     { getNextPageParam: (lastPage) => lastPage.nextCursor }
-//   );
+function RecentTweets() {
+  const tweets = api.tweet.infiniteFeed.useInfiniteQuery(
+    {},
+    { getNextPageParam: (lastPage) => lastPage.nextCursor }
+  );
 
-//   return (
-//     <InfiniteTweetList
-//       tweets={tweets.data?.pages.flatMap((page) => page.tweets)}
-//       isError={tweets.isError}
-//       isLoading={tweets.isLoading}
-//       hasMore={tweets.hasNextPage}
-//       fetchNewTweets={tweets.fetchNextPage}
-//     />
-//   );
-// }
+  return (
+    <InfiniteTweetList
+      tweets={tweets.data?.pages.flatMap((page) => page.tweets)}
+      isError={tweets.isError}
+      isLoading={tweets.isLoading}
+      hasMore={tweets.hasNextPage}
+      fetchNewTweets={tweets.fetchNextPage}
+    />
+  );
+}
 
-// function FollowingTweets() {
-//   const tweets = api.tweet.infiniteFeed.useInfiniteQuery(
-//     { onlyFollowing: true },
-//     { getNextPageParam: (lastPage) => lastPage.nextCursor }
-//   );
+function FollowingTweets() {
+  const tweets = api.tweet.infiniteFeed.useInfiniteQuery(
+    { onlyFollowing: true },
+    { getNextPageParam: (lastPage) => lastPage.nextCursor }
+  );
 
-//   return (
-//     <InfiniteTweetList
-//       tweets={tweets.data?.pages.flatMap((page) => page.tweets)}
-//       isError={tweets.isError}
-//       isLoading={tweets.isLoading}
-//       hasMore={tweets.hasNextPage}
-//       fetchNewTweets={tweets.fetchNextPage}
-//     />
-//   );
-// }
+  return (
+    <InfiniteTweetList
+      tweets={tweets.data?.pages.flatMap((page) => page.tweets)}
+      isError={tweets.isError}
+      isLoading={tweets.isLoading}
+      hasMore={tweets.hasNextPage}
+      fetchNewTweets={tweets.fetchNextPage}
+    />
+  );
+}
 
 export default Home;
