@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
@@ -42,7 +43,7 @@ const Home: NextPage = () => {
 };
 
 function RecentTweets() {
-  const tweets =  api.tweet.infiniteFeed.useInfiniteQuery(
+  let tweets =  api.tweet.infiniteFeed.useInfiniteQuery(
     {},
     { getNextPageParam: (lastPage) => lastPage.nextCursor }
   );

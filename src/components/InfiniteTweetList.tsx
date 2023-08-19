@@ -13,7 +13,7 @@ type Tweet = {
   createdAt: Date;
   likeCount: number;
   likedByMe: boolean;
-  user: { id: string; image: string | null; name: string | null };
+  user: { id: string; image: string | null; name: string | null } | any;
 };
 
 type InfiniteTweetListProps = {
@@ -105,7 +105,7 @@ function TweetCard({
         updateData
       );
       trpcUtils.tweet.infiniteProfileFeed.setInfiniteData(
-        { userId: user.id },
+        { userId: user.id ? user.id : "1" },
         updateData
       );
     },
