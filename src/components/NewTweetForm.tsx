@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { useSession } from "next-auth/react";
 import {
   type FormEvent,
@@ -9,6 +10,7 @@ import {
 import { api } from "y/utils/api";
 import { Button } from "./Button";
 import { ProfileImage } from "./ProfileImage";
+
 
 function updateTextAreaSize(textArea?: HTMLTextAreaElement) {
   if (textArea == null) return;
@@ -41,7 +43,7 @@ function Form() {
     onSuccess: (newTweet) => {
       setInputValue("");
 
-      if (session.status !== "authenticated") return;
+      if (session.status !== "authenticated") return ;
 
       trpcUtils.tweet.infiniteFeed.setInfiniteData({}, (oldData) => {
         if (oldData?.pages[0] == null) return;

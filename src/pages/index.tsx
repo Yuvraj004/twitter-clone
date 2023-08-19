@@ -37,13 +37,14 @@ const Home: NextPage = () => {
         )}
       </header>
       <NewTweetForm />
+      
       {selectedTab === "Recent" ? <RecentTweets /> : <FollowingTweets />}
     </>
   );
 };
 
 function RecentTweets() {
-  const tweets = api.tweet.infiniteFeed.useInfiniteQuery(
+  const tweets =  api.tweet.infiniteFeed.useInfiniteQuery(
     {},
     { getNextPageParam: (lastPage) => lastPage.nextCursor }
   );

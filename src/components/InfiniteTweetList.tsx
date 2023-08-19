@@ -112,36 +112,61 @@ function TweetCard({
   });
 
   function handleToggleLike() {
-    toggleLike.mutate({ id });
+    if (id !== null) {
+      toggleLike.mutate({ id });
+    }
   }
-
   return (
-    <li className="flex gap-4 border-b px-4 py-4">
-      <Link href={`/profiles/${user.id}`}>
-        <ProfileImage src={user.image} />
-      </Link>
-      <div className="flex flex-grow flex-col">
-        <div className="flex gap-1">
-          <Link
-            href={`/profiles/${user.id}`}
-            className="font-bold outline-none hover:underline focus-visible:underline"
-          >
-            {user.name}
+    <>
+      {user?.id && user.image ? (
+        <li className="flex gap-4 border-b px-4 py-4">
+          <Link href={`/profiles/${user.id}`}>
+            {user.image ? (
+              <ProfileImage src={user.image} />
+            ) : (
+              <div className="placeholder-profile-image" />
+            )}
           </Link>
-          <span className="text-gray-500">-</span>
-          <span className="text-gray-500">
-            {dateTimeFormatter.format(createdAt)}
-          </span>
-        </div>
-        <p className="whitespace-pre-wrap">{content}</p>
-        <HeartButton
-          onClick={handleToggleLike}
-          isLoading={toggleLike.isLoading}
-          likedByMe={likedByMe}
-          likeCount={likeCount}
-        />
-      </div>
-    </li>
+          <div className="flex flex-grow flex-col">
+            <div className="flex gap-1">
+              <span className="text-gray-500">-</span>
+              <span className="text-gray-500">
+                {dateTimeFormatter.format(createdAt)}
+              </span>
+            </div>
+            <p className="whitespace-pre-wrap">{content}</p>
+            <HeartButton
+              onClick={handleToggleLike}
+              isLoading={toggleLike.isLoading}
+              likedByMe={likedByMe}
+              likeCount={likeCount}
+            />
+          </div>
+        </li>
+      ) : (
+        <>
+          <li className="flex gap-4 border-b px-4 py-4">
+            <div>Unknown User</div>
+            <div className="flex flex-grow flex-col">
+              <div className="flex gap-1">
+                <span className="text-gray-500">-</span>
+                <span className="text-gray-500">
+                  {dateTimeFormatter.format(createdAt)}
+                </span>
+              </div>
+              <p className="whitespace-pre-wrap">{content}</p>
+              <HeartButton
+                onClick={handleToggleLike}
+                isLoading={toggleLike.isLoading}
+                likedByMe={likedByMe}
+                likeCount={likeCount}
+              />
+            </div>
+            <hr></hr>
+          </li>
+        </>
+      )}
+    </>
   );
 }
 
@@ -174,19 +199,17 @@ function HeartButton({
     <button
       disabled={isLoading}
       onClick={onClick}
-      className={`group -ml-2 flex items-center gap-1 self-start transition-colors duration-200 ${
-        likedByMe
-          ? "text-red-500"
-          : "text-gray-500 hover:text-red-500 focus-visible:text-red-500"
-      }`}
+      className={`group -ml-2 flex items-center gap-1 self-start transition-colors duration-200 ${likedByMe
+        ? "text-red-500"
+        : "text-gray-500 hover:text-red-500 focus-visible:text-red-500"
+        }`}
     >
       <IconHoverEffect red>
         <HeartIcon
-          className={`transition-colors duration-200 ${
-            likedByMe
-              ? "fill-red-500"
-              : "fill-gray-500 group-hover:fill-red-500 group-focus-visible:fill-red-500"
-          }`}
+          className={`transition-colors duration-200 ${likedByMe
+            ? "fill-red-500"
+            : "fill-gray-500 group-hover:fill-red-500 group-focus-visible:fill-red-500"
+            }`}
         />
       </IconHoverEffect>
       <span>{likeCount}</span>
