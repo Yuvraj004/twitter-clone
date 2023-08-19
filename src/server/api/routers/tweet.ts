@@ -112,7 +112,6 @@ async function getInfiniteTweets({
       },
     },
   });
-  // const data = await ctx.prisma.tweet.findMany();
 
   let nextCursor: typeof cursor | undefined;
   if (data.length > limit) {
